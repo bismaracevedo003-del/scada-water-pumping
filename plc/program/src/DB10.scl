@@ -1,0 +1,29 @@
+DATA_BLOCK "DB10"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+VAR
+    TankLevel_PV : REAL;
+    DischargePressure_PV : REAL;
+    Flow_PV : REAL;
+    Pump1_Run : BOOL;
+    Pump2_Run : BOOL;
+    Pump1_Fault : BOOL;
+    Pump2_Fault : BOOL;
+    Pump1_Mode : INT := 1;
+    Pump2_Mode : INT := 1;
+    Pump1_Command : BOOL;
+    Pump2_Command : BOOL;
+    LeadPump : INT := 1;
+    Pump1_Runtime_s : DINT;
+    Pump2_Runtime_s : DINT;
+    Alarm_LowLevel : BOOL;
+    Alarm_HighPressure : BOOL;
+    Alarm_DryRun : BOOL;
+    Alarm_Overload : BOOL;
+    Alarm_SensorFault : BOOL;
+    Alarm_JammedPump : BOOL;
+    AlarmAck : BOOL;
+END_VAR
+BEGIN
+END_DATA_BLOCK

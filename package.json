@@ -1,0 +1,15 @@
+{
+  "name": "scada-water-pumping",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SCADA for a dual-pump water pumping station with Siemens S7-1200, Node.js, React and MySQL",
+  "scripts": {
+    "setup": "npm install && npm --prefix frontend install",
+    "dev": "node backend/src/server.js",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "test": "node --test \"backend/tests/*.test.js\" && npm run test:python",
+    "test:python": "python -m unittest discover -s simulation/tests -v"
+  },
+  "license": "MIT"
+}

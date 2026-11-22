@@ -1,0 +1,57 @@
+ORGANIZATION_BLOCK "OB1"
+TITLE = "Main"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_TEMP
+    levelFault : BOOL;
+    pressureFault : BOOL;
+    flowFault : BOOL;
+    p1Start : BOOL;
+    p2Start : BOOL;
+    p1Stop : BOOL;
+    p2Stop : BOOL;
+    pumpRunning : BOOL;
+    jamCondition : BOOL;
+END_VAR
+BEGIN
+    "Scale_Level"(Raw := "IW64", EuMin := 0.0, EuMax := 100.0, Value => "DB10".TankLevel_PV, Fault := #levelFault);
+    "Scale_Pressure"(Raw := "IW66", EuMin := 0.0, EuMax := 10.0, Value => "DB10".DischargePressure_PV, Fault := #pressureFault);
+    "Scale_Flow"(Raw := "IW68", EuMin := 0.0, EuMax := 120.0, Value => "DB10".Flow_PV, Fault := #flowFault);
+
+    "Alarm_LowLevel_DB"(Condition := ("DB10".TankLevel_PV < 15.0), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_LowLevel);
+    "Alarm_HighPressure_DB"(Condition := ("DB10".DischargePressure_PV > 9.5), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_HighPressure);
+    "Alarm_Overload_DB"(Condition := ("I0.2" OR "I0.3"), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_Overload);
+    "Alarm_SensorFault_DB"(Condition := (#levelFault OR #pressureFault OR #flowFault), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_SensorFault);
+
+    #pumpRunning := "DB10".Pump1_Run OR "DB10".Pump2_Run;
+    "Alarm_DryRun_DB"(Condition := (#pumpRunning AND ("DB10".TankLevel_PV < 5.0)), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_DryRun);
+
+    #jamCondition := #pumpRunning AND ("DB10".Flow_PV < 2.0) AND NOT "I0.5";
+    "JamTimer"(IN := #jamCondition, PT := T#10s);
+    "Alarm_JammedPump_DB"(Condition := "JamTimer".Q, Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_JammedPump);
+
+    #p1Start := (("DB10".LeadPump = 1) AND ("DB10".TankLevel_PV < 30.0)) OR (("DB10".LeadPump = 2) AND ("DB10".TankLevel_PV < 20.0));
+    #p2Start := (("DB10".LeadPump = 2) AND ("DB10".TankLevel_PV < 30.0)) OR (("DB10".LeadPump = 1) AND ("DB10".TankLevel_PV < 20.0));
+    #p1Stop := "DB10".TankLevel_PV > 75.0;
+    #p2Stop := "DB10".TankLevel_PV > 85.0;
+
+    "Pump1_Ctrl_DB"(Mode := "DB10".Pump1_Mode, Command := "DB10".Pump1_Command, Enable := ("I0.4" AND NOT "I0.0"), Fault := ("I0.2" OR "DB10".Pump1_Fault), IsLead := ("DB10".LeadPump = 1), StartLevel := #p1Start, StopLevel := #p1Stop, HighPressure := "DB10".Alarm_HighPressure, Runtime := "DB10".Pump1_Runtime_s, Run => "DB10".Pump1_Run);
+    "Pump2_Ctrl_DB"(Mode := "DB10".Pump2_Mode, Command := "DB10".Pump2_Command, Enable := ("I0.4" AND NOT "I0.0"), Fault := ("I0.3" OR "DB10".Pump2_Fault), IsLead := ("DB10".LeadPump = 2), StartLevel := #p2Start, StopLevel := #p2Stop, HighPressure := "DB10".Alarm_HighPressure, Runtime := "DB10".Pump2_Runtime_s, Run => "DB10".Pump2_Run);
+
+    IF ((("DB10".Pump1_Runtime_s > 600) OR ("DB10".Pump2_Runtime_s > 600)) AND ("DB10".TankLevel_PV > 50.0) AND NOT #p1Start AND NOT #p2Start) THEN
+        IF "DB10".LeadPump = 1 THEN
+            "DB10".LeadPump := 2;
+        ELSE
+            "DB10".LeadPump := 1;
+        END_IF;
+        "DB10".Pump1_Runtime_s := 0;
+        "DB10".Pump2_Runtime_s := 0;
+    END_IF;
+
+    "Q0.0" := "DB10".Pump1_Run;
+    "Q0.1" := "DB10".Pump2_Run;
+    "Q0.2" := "DB10".Alarm_LowLevel OR "DB10".Alarm_HighPressure OR "DB10".Alarm_Overload;
+    "Q0.3" := "DB10".Alarm_DryRun OR "DB10".Alarm_JammedPump;
+    "DB10".Pump1_Fault := "I0.2";
+    "DB10".Pump2_Fault := "I0.3";
+END_ORGANIZATION_BLOCK

@@ -1,0 +1,26 @@
+FUNCTION_BLOCK "FB_Alarm"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    Condition : BOOL;
+    Ack : BOOL;
+END_VAR
+VAR_OUTPUT
+    Alarm : BOOL;
+END_VAR
+VAR
+    latched : BOOL := FALSE;
+    ackPrev : BOOL := FALSE;
+    risingAck : BOOL;
+END_VAR
+BEGIN
+    risingAck := Ack AND NOT ackPrev;
+    ackPrev := Ack;
+    IF Condition THEN
+        latched := TRUE;
+    END_IF;
+    IF risingAck AND NOT Condition THEN
+        latched := FALSE;
+    END_IF;
+    Alarm := latched;
+END_FUNCTION_BLOCK

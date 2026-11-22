@@ -1,0 +1,43 @@
+{
+  "description": "Simulation scenarios used for demos and manual verification",
+  "scenarios": {
+    "normal": {
+      "initial_level": 50,
+      "inflow_m3h": 20,
+      "events": []
+    },
+    "high_demand": {
+      "initial_level": 40,
+      "inflow_m3h": 2,
+      "events": [
+        { "at_s": 20, "action": "set_inflow", "value_m3h": 60 }
+      ]
+    },
+    "low_level": {
+      "initial_level": 12,
+      "inflow_m3h": 0,
+      "events": []
+    },
+    "sensor_fault": {
+      "initial_level": 45,
+      "inflow_m3h": 20,
+      "events": [
+        { "at_s": 5, "action": "inject_fault", "fault": "sensor_fault", "active": true }
+      ]
+    },
+    "overload": {
+      "initial_level": 25,
+      "inflow_m3h": 0,
+      "events": [
+        { "at_s": 10, "action": "inject_fault", "fault": "overload_pump1", "active": true }
+      ]
+    },
+    "jammed_pump": {
+      "initial_level": 25,
+      "inflow_m3h": 0,
+      "events": [
+        { "at_s": 3, "action": "inject_fault", "fault": "flow_blocked", "active": true }
+      ]
+    }
+  }
+}

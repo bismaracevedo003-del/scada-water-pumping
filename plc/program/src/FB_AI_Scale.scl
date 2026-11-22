@@ -1,0 +1,27 @@
+FUNCTION_BLOCK "FB_AI_Scale"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    Raw : WORD;
+    EuMin : REAL;
+    EuMax : REAL;
+END_VAR
+VAR_OUTPUT
+    Value : REAL;
+    Fault : BOOL;
+END_VAR
+VAR
+    rawInt : INT;
+    normalized : REAL;
+END_VAR
+BEGIN
+    rawInt := WORD_TO_INT(Raw);
+    normalized := (INT_TO_REAL(rawInt) - 5530.0) / 22118.0;
+    IF (normalized < -0.05) OR (normalized > 1.05) THEN
+        Fault := TRUE;
+        normalized := LIMIT(MIN := 0.0, IN := normalized, MAX := 1.0);
+    ELSE
+        Fault := FALSE;
+    END_IF;
+    Value := EuMin + normalized * (EuMax - EuMin);
+END_FUNCTION_BLOCK

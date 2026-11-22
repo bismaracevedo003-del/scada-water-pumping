@@ -1,0 +1,83 @@
+DATA_BLOCK "Scale_Level"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_AI_Scale"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Scale_Pressure"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_AI_Scale"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Scale_Flow"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_AI_Scale"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Alarm_LowLevel_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_Alarm"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Alarm_HighPressure_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_Alarm"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Alarm_DryRun_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_Alarm"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Alarm_Overload_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_Alarm"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Alarm_SensorFault_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_Alarm"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Alarm_JammedPump_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_Alarm"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Pump1_Ctrl_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_PumpControl"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "Pump2_Ctrl_DB"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"FB_PumpControl"
+BEGIN
+END_DATA_BLOCK
+
+DATA_BLOCK "JamTimer"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+"TON_TIME"
+BEGIN
+END_DATA_BLOCK

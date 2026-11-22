@@ -14,9 +14,9 @@ VAR_TEMP
     jamCondition : BOOL;
 END_VAR
 BEGIN
-    "Scale_Level"(Raw := "IW64", EuMin := 0.0, EuMax := 100.0, Value => "DB10".TankLevel_PV, Fault := #levelFault);
-    "Scale_Pressure"(Raw := "IW66", EuMin := 0.0, EuMax := 10.0, Value => "DB10".DischargePressure_PV, Fault := #pressureFault);
-    "Scale_Flow"(Raw := "IW68", EuMin := 0.0, EuMax := 120.0, Value => "DB10".Flow_PV, Fault := #flowFault);
+    "Scale_Level"(Raw := "IW64", EuMin := 0.0, EuMax := 100.0, Value => "DB10".TankLevel_PV, Fault => #levelFault);
+    "Scale_Pressure"(Raw := "IW66", EuMin := 0.0, EuMax := 10.0, Value => "DB10".DischargePressure_PV, Fault => #pressureFault);
+    "Scale_Flow"(Raw := "IW68", EuMin := 0.0, EuMax := 120.0, Value => "DB10".Flow_PV, Fault => #flowFault);
 
     "Alarm_LowLevel_DB"(Condition := ("DB10".TankLevel_PV < 15.0), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_LowLevel);
     "Alarm_HighPressure_DB"(Condition := ("DB10".DischargePressure_PV > 9.5), Ack := "DB10".AlarmAck, Alarm => "DB10".Alarm_HighPressure);

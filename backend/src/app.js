@@ -65,7 +65,7 @@ export function createApp({ adapter, repository, config = defaultConfig }) {
   app.get('/api/v1/health', (_request, response) => {
     response.json({
       status: 'ok',
-      source: adapter.constructor.name === 'S7Adapter' ? 's7' : 'simulator',
+      source: adapter.source || (adapter.constructor.name === 'S7Adapter' ? 's7' : 'simulator'),
       adapter: adapter.constructor.name,
       repository: repository.constructor.name,
       pollIntervalMs: config.pollIntervalMs,

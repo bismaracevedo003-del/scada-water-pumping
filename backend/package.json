@@ -15,5 +15,8 @@
     "mysql2": "^3.15.3",
     "nodes7": "^0.1.2",
     "ws": "^8.18.3"
+  },
+  "optionalDependencies": {
+    "mqtt": "^5.14.0"
   }
 }

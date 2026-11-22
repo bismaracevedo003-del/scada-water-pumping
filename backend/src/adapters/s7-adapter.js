@@ -1,5 +1,3 @@
-import nodes7 from 'nodes7';
-
 export const S7_ADDRESSES = {
   TankLevel_PV: 'DB10,REAL0',
   DischargePressure_PV: 'DB10,REAL4',
@@ -31,11 +29,18 @@ const ADDRESS_TO_TAG = Object.fromEntries(
 export class S7Adapter {
   constructor({ host, port, rack, slot }) {
     this.connection = { host, port, rack, slot };
-    this.driver = new nodes7();
+    this.driver = null;
     this.connected = false;
   }
 
   async connect() {
+    let nodes7;
+    try {
+      ({ default: nodes7 } = await import('nodes7'));
+    } catch (error) {
+      throw new Error(`S7 adapter requires the optional "nodes7" package: ${error.message}`);
+    }
+    this.driver = new nodes7();
     await new Promise((resolve, reject) => {
       this.driver.initiateConnection(this.connection, (error) => {
         if (error) reject(new Error(`S7 connection failed: ${error}`));

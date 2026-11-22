@@ -9,7 +9,8 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "build": "npm --prefix frontend run build",
     "test": "node --test \"backend/tests/*.test.js\" && npm run test:python",
-    "test:python": "python -m unittest discover -s simulation/tests -v"
+    "test:python": "python -m unittest discover -s simulation/tests -v",
+    "setup:real": "npm --prefix backend install --include=optional"
   },
   "license": "MIT"
 }

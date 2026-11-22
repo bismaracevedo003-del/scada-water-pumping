@@ -1,7 +1,17 @@
-import mysql from 'mysql2/promise';
-
 export class MysqlRepository {
   constructor({ host, port, user, password, name }) {
+    this.connection = { host, port, user, password, name };
+    this.pool = null;
+  }
+
+  async init() {
+    let mysql;
+    try {
+      ({ default: mysql } = await import('mysql2/promise'));
+    } catch (error) {
+      throw new Error(`MySQL repository requires the optional "mysql2" package: ${error.message}`);
+    }
+    const { host, port, user, password, name } = this.connection;
     this.pool = mysql.createPool({
       host,
       port,
@@ -11,9 +21,6 @@ export class MysqlRepository {
       waitForConnections: true,
       connectionLimit: 5,
     });
-  }
-
-  async init() {
     await this.pool.query('SELECT 1');
     return this;
   }
@@ -61,6 +68,6 @@ export class MysqlRepository {
   }
 
   async close() {
-    await this.pool.end();
+    if (this.pool) await this.pool.end();
   }
 }
